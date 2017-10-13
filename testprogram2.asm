@@ -1,0 +1,5 @@
+.data
+.text
+lui $t1, 0x1000
+lui $t2, 0x1000
+lui $t3, 0x1000
