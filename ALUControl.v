@@ -42,13 +42,13 @@ always@(Selector)begin
 		R_Type_NOR:    ALUControlValues = 4'b0010;
 		R_Type_ADD: 	ALUControlValues = 4'b0011;
 		R_Type_SUB: 	ALUControlValues = 4'b0100;
-		R_Type_SHIFTL:	ALUControlValues = 4'b1110;
-		R_Type_SHIFTR: ALUControlValues = 4'b1111;
+		R_Type_SHIFTL:	ALUControlValues = 4'b0110;
+		R_Type_SHIFTR: ALUControlValues = 4'b0111;
 		I_Type_ADDI:   ALUControlValues = 4'b0011;
 		I_Type_ORI: 	ALUControlValues = 4'b0001;
 		
 		
-		default: ALUControlValues = 4'b1001;
+		default: ALUControlValues = 4'b0110;
 	endcase
 end
 

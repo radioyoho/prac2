@@ -32,8 +32,8 @@ localparam OR 	= 4'b0001;
 localparam NOR = 4'b0010;
 localparam ADD = 4'b0011;
 localparam SUB = 4'b0100;
-localparam SHIFTL = 4'b1110;
-localparam SHIFTR = 4'b1111;
+localparam SHIFTL = 4'b0110;
+localparam SHIFTR = 4'b0111;
    
    always @ (A or B or ALUOperation or shamt)
      begin
@@ -56,5 +56,5 @@ localparam SHIFTR = 4'b1111;
 			ALUResult= 0;
 		endcase // case(control)
 		Zero = (ALUResult==0) ? 1'b1 : 1'b0;
-     end // always @ (A or B or control)
+     end // always @ (A or B or contro or shamtl)
 endmodule // ALU
