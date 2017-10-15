@@ -38,11 +38,10 @@ always@(OP) begin
 	casex(OP)
 		R_Type:       ControlValues= 12'b0_1_001_00_00_111;
 		I_Type_ADDI:  ControlValues= 12'b0_0_101_00_00_100;
-		I_Type_ORI:	  ControlValues= 12'b0_0_101_00_00_001;
+		I_Type_ORI:	  ControlValues= 12'b0_0_101_00_00_101;
 		I_Type_LUI:	  ControlValues= 12'b1_0_101_00_00_001;
+		
 
-		
-		
 		default:
 			ControlValues= 12'b0;
 		endcase

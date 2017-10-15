@@ -86,6 +86,7 @@ Control
 ControlUnit
 (
 	.OP(Instruction_wire[31:26]),
+	
 	.RegDst(RegDst_wire),
 	.BranchNE(BranchNE_wire),
 	.BranchEQ(BranchEQ_wire),
@@ -93,6 +94,7 @@ ControlUnit
 	.ALUSrc(ALUSrc_wire),
 	.RegWrite(RegWrite_wire),
 	.lui(lui_wire)
+	
 );
 
 PC_Register
@@ -205,6 +207,7 @@ ArithmeticLogicUnit
 	.ALUOperation(ALUOperation_wire),
 	.A(ReadData1_wire),
 	.B(ReadData2OrInmmediate_wire),
+	.shamt(Instruction_wire[10:6]),
 	.Zero(Zero_wire),
 	.ALUResult(ALUResult_wire)
 );
