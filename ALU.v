@@ -49,9 +49,9 @@ localparam SHIFTR = 4'b0111;
 		  NOR: // add
 			ALUResult=~(A | B);
 		  SHIFTL:
-			ALUResult=A<<shamt;
+			ALUResult=B<<shamt;
 		  SHIFTR:
-			ALUResult=A>>shamt;
+			ALUResult=B>>shamt;
 		default:
 			ALUResult= 0;
 		endcase // case(control)
