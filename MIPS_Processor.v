@@ -57,6 +57,8 @@ wire RegWrite_wire;
 wire Zero_wire;
 wire lui_wire;
 
+wire branch;
+
 wire [2:0] ALUOp_wire;
 wire [3:0] ALUOperation_wire;
 wire [4:0] WriteRegister_wire;
@@ -232,6 +234,8 @@ MUX_ALU_or_Lui
 	.MUX_Output(ALU_or_lui_wire)
 
 );
+
+assign branch = (BranchEQ_wire&Zero_wire)|(BranchNE_wire&~Zero_wire);
 
 assign ALUResultOut = ALUResult_wire;
 
