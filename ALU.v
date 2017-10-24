@@ -28,12 +28,12 @@ module ALU
 );
 
 localparam AND = 4'b0000;
-localparam OR 	= 4'b0001;
+localparam OR  = 4'b0001;
 localparam NOR = 4'b0010;
 localparam ADD = 4'b0011;
 localparam SUB = 4'b0100;
-localparam SHIFTL = 4'b0110;
-localparam SHIFTR = 4'b0111;
+localparam RSHIFT = 4'b0101;
+localparam LSHIFT = 4'b0110;
    
    always @ (A or B or ALUOperation or shamt)
      begin
@@ -42,19 +42,19 @@ localparam SHIFTR = 4'b0111;
 			ALUResult=A + B;
 		  SUB: // sub
 			ALUResult=A - B;
-		  AND: // add
+		  AND: // sub
 			ALUResult=A & B;
-		  OR: // add
+		  OR: // sub
 			ALUResult=A | B;
-		  NOR: // add
+		  NOR: // sub
 			ALUResult=~(A | B);
-		  SHIFTL:
-			ALUResult=B<<shamt;
-		  SHIFTR:
+		  LSHIFT:
+			ALUResult=B<<shamt;//Rs=T, Rs=A
+		  RSHIFT:
 			ALUResult=B>>shamt;
 		default:
 			ALUResult= 0;
 		endcase // case(control)
 		Zero = (ALUResult==0) ? 1'b1 : 1'b0;
-     end // always @ (A or B or contro or shamtl)
+     end // always @ (A or B or control)
 endmodule // ALU
