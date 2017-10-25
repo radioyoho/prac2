@@ -27,10 +27,11 @@ module Control
 	output lui
 );
 localparam R_Type = 0;
-localparam I_Type_ADDI = 6'h8;
+localparam I_Type_ADDI =6'h08;
 localparam I_Type_ORI = 6'h0D;
 localparam I_Type_LUI = 6'h0F;
 localparam I_Type_BEQ = 6'h04;
+localparam I_Type_ANDI =6'h0c;
 
 reg [11:0] ControlValues;
 
@@ -41,6 +42,7 @@ always@(OP) begin
 		I_Type_ORI:    ControlValues= 12'b0_0_101_00_00_101;
 		I_Type_LUI:    ControlValues= 12'b1_0_001_00_00_000;
 		I_Type_BEQ:		ControlValues= 12'b0_0_000_00_01_010;
+		I_Type_ANDI:	ControlValues= 12'b0_0_101_00_00_011;
 		default:
 			ControlValues= 12'b0;
 		endcase
