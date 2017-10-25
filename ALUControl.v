@@ -32,6 +32,7 @@ localparam R_Type_LSHIFT = 9'b111_000000;
 localparam I_Type_ADDI   = 9'b100_xxxxxx;
 localparam I_Type_ORI    = 9'b101_xxxxxx;
 localparam I_Type_BEQ    = 9'b010_xxxxxx;
+localparam I_Type_BNE    = 9'b110_xxxxxx;
 localparam I_Type_ANDI   = 9'b011_xxxxxx;
 
 reg [3:0] ALUControlValues;
@@ -50,7 +51,8 @@ always@(Selector)begin
 		R_Type_LSHIFT: ALUControlValues = 4'b0110;
 		I_Type_ADDI:   ALUControlValues = 4'b0011;
 		I_Type_ORI: 	ALUControlValues = 4'b0001;
-		I_Type_BEQ:		ALUControlValues = 4'b0100;
+		I_Type_BEQ:		ALUControlValues = 4'b1000;
+		I_Type_BNE:		ALUControlValues = 4'b1100;
 		I_Type_ANDI:	ALUControlValues = 4'b0000;
 		default: ALUControlValues = 4'b1001;
 	endcase

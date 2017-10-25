@@ -73,6 +73,8 @@ wire [31:0] InmmediateExtendAnded_wire;
 wire [31:0] PCtoBranch_wire;
 wire [31:0] LuiWire;		//extended inmediat input
 wire [31:0] ALU_or_LUI_wire;	//output from luiMux
+wire [31:0] BranchPC_wire;
+wire [31:0] PC_result_wire;
 integer ALUStatus;
 
 //******************************************************************/
@@ -93,7 +95,7 @@ PC_Register
 ProgramCounter(
 	.clk(clk),
 	.reset(reset),
-	.NewPC(PC_4_wire),
+	.NewPC(PC_result_wire),
 	.PCValue(PC_wire)
 );
 
@@ -119,6 +121,25 @@ PC_Puls_4
 //******************************************************************/
 //******************************************************************/
 //******************************************************************/
+//******************************************************************/
+Adder32bits
+Address_plus_PC
+(
+	.Data0(PC_4_wire),
+	.Data1({{14{Instruction_wire[15]}},Instruction_wire[15:0],2'b00}),
+	.Result(BranchPC_wire)
+);
+
+Multiplexer2to1
+#(
+	.NBits(32)
+)
+Branch_mux(
+	.Selector(branch),
+	.MUX_Data0(PC_4_wire),
+	.MUX_Data1(BranchPC_wire),
+	.MUX_Output(PC_result_wire)
+);
 //******************************************************************/
 
 Multiplexer2to1
