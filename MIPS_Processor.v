@@ -25,7 +25,6 @@
 *	12/06/2016
 ******************************************************************/
 
-
 module MIPS_Processor
 #(	parameter MEMORY_DEPTH = 32)
 (
@@ -56,7 +55,10 @@ wire Zero_wire;
 wire Lui_selec;
 wire branch_output;
 wire branch;
+
 wire jump_wire;
+wire jal_wire;
+wire branch_or_jal_wire;
 
 wire [2:0] ALUOp_wire;
 wire [3:0] ALUOperation_wire;
@@ -90,6 +92,7 @@ ControlUnit
 	.ALUSrc(ALUSrc_wire),
 	.lui(Lui_selec),
 	.jump(jump_wire),
+	.jal(jal_wire),
 	.RegWrite(RegWrite_wire)
 );
 
@@ -135,29 +138,31 @@ Address_plus_PC
 Brancher
 branch_control
 (
-	.Rt(ReadData1_wire),
-	.Rs(ReadData2_wire),
+	.Rt(ReadData1_wire),//Rs
+	.Rs(ReadData2_wire),//Rt
 	.BEQ(BranchEQ_wire),
 	.BNE(BranchNE_wire),
-	//.mux_selector(branch),
 	.branch(branch_output)
 );
-//añadir mux para PC=Jaddress
 //añadir R[31]=PC para jal
-//añadir mux para PC=[Rs]
-//añadir señal de control
-Multiplexer2to1
+//añadir modulo para hacer JumpAddr={ PC+4[31:28], address, 2’b0 } OJO con la suma
+Multiplexer4to1
 #(
 	.NBits(32)
 )
-Branch_mux(
-	.Selector(branch_output),
+PC_mux(
+	.Selector({jump_wire,branch_or_jal_wire}),
 	.MUX_Data0(PC_4_wire),
 	.MUX_Data1(BranchPC_wire),
+	.MUX_Data2(), //jumpaddr
+	.MUX_Data3(ReadData1_wire),//Rs	
 	.MUX_Output(PC_result_wire)
 );
 //******************************************************************/
-
+//******************************************************************/
+//******************************************************************/
+//******************************************************************/
+//******************************************************************/
 Multiplexer2to1
 #(
 	.NBits(5)
@@ -179,7 +184,6 @@ Register_File
 	.WriteRegister(WriteRegister_wire),
 	.ReadRegister1(Instruction_wire[25:21]),//Rs
 	.ReadRegister2(Instruction_wire[20:16]),//RT
-	//.WriteData(ALUResult_wire),
 	.WriteData(ALU_or_LUI_wire),
 	.ReadData1(ReadData1_wire),//RS
 	.ReadData2(ReadData2_wire)//RT
@@ -241,9 +245,8 @@ luiModule lui(
    .ExtendedOutput(LuiWire)
 );
 
-//assign branch = (BranchEQ_wire & Zero_wire)|(BranchNE_wire & ~Zero_wire);
-
 assign ALUResultOut = ALUResult_wire;
 
-endmodule
+assign branch_or_jal_wire = branch_output | jal_wire;
 
+endmodule
