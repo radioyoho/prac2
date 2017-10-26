@@ -43,7 +43,7 @@ always@(OP) begin
 		I_Type_ORI:    ControlValues= 12'b0_0_101_00_00_101;
 		I_Type_LUI:    ControlValues= 12'b1_0_001_00_00_000;
 		I_Type_BEQ:		ControlValues= 12'b0_0_000_00_01_010;
-		I_Type_BNE:		ControlValues= 12'b0_0_000_00_01_110;
+		I_Type_BNE:		ControlValues= 12'b0_0_000_00_10_110;
 		I_Type_ANDI:	ControlValues= 12'b0_0_101_00_00_011;
 		
 		default:

@@ -54,7 +54,7 @@ wire ALUSrc_wire;
 wire RegWrite_wire;
 wire Zero_wire;
 wire Lui_selec;
-
+wire branch_output;
 wire branch;
 
 wire [2:0] ALUOp_wire;
@@ -130,12 +130,23 @@ Address_plus_PC
 	.Result(BranchPC_wire)
 );
 
+Brancher
+branch_control
+(
+	.Rt(Instruction_wire[20:16]),
+	.Rs(Instruction_wire[25:21]),
+	.BEQ(BranchEQ_wire),
+	.BNE(BranchNE_wire),
+	//.mux_selector(branch),
+	.branch(branch_output)
+);
+
 Multiplexer2to1
 #(
 	.NBits(32)
 )
 Branch_mux(
-	.Selector(branch),
+	.Selector(branch_output),
 	.MUX_Data0(PC_4_wire),
 	.MUX_Data1(BranchPC_wire),
 	.MUX_Output(PC_result_wire)
@@ -225,7 +236,7 @@ luiModule lui(
    .ExtendedOutput(LuiWire)
 );
 
-assign branch = (BranchEQ_wire & Zero_wire)|(BranchNE_wire & ~Zero_wire);
+//assign branch = (BranchEQ_wire & Zero_wire)|(BranchNE_wire & ~Zero_wire);
 
 assign ALUResultOut = ALUResult_wire;
 
