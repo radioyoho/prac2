@@ -133,8 +133,8 @@ Address_plus_PC
 Brancher
 branch_control
 (
-	.Rt(Instruction_wire[20:16]),
-	.Rs(Instruction_wire[25:21]),
+	.Rt(ReadData1_wire),
+	.Rs(ReadData2_wire),
 	.BEQ(BranchEQ_wire),
 	.BNE(BranchNE_wire),
 	//.mux_selector(branch),
@@ -172,12 +172,12 @@ Register_File
 	.reset(reset),
 	.RegWrite(RegWrite_wire),
 	.WriteRegister(WriteRegister_wire),
-	.ReadRegister1(Instruction_wire[25:21]),
-	.ReadRegister2(Instruction_wire[20:16]),
+	.ReadRegister1(Instruction_wire[25:21]),//Rs
+	.ReadRegister2(Instruction_wire[20:16]),//RT
 	//.WriteData(ALUResult_wire),
 	.WriteData(ALU_or_LUI_wire),
-	.ReadData1(ReadData1_wire),
-	.ReadData2(ReadData2_wire)
+	.ReadData1(ReadData1_wire),//RS
+	.ReadData2(ReadData2_wire)//RT
 );
 
 SignExtend

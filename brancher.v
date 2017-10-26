@@ -2,18 +2,18 @@
 module Brancher
 #
 (
-	parameter NBits=5
+	parameter NBits=32
 )
 (
 	input [NBits-1:0] Rt,
 	input [NBits-1:0] Rs,
 	input BEQ,
 	input BNE,
-	input mux_selector,
+	//input mux_selector,
 	output reg branch
 );
 
-always @ (BEQ or BNE or Rt or Rs or mux_selector)
+always @ (BEQ or BNE or Rt or Rs)
 
 	if(Rs==Rt && BEQ)
 		branch=1'b1;
