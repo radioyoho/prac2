@@ -56,6 +56,7 @@ wire Zero_wire;
 wire Lui_selec;
 wire branch_output;
 wire branch;
+wire jump_wire;
 
 wire [2:0] ALUOp_wire;
 wire [3:0] ALUOperation_wire;
@@ -88,6 +89,7 @@ ControlUnit
 	.ALUOp(ALUOp_wire),
 	.ALUSrc(ALUSrc_wire),
 	.lui(Lui_selec),
+	.jump(jump_wire),
 	.RegWrite(RegWrite_wire)
 );
 
@@ -126,7 +128,7 @@ Adder32bits
 Address_plus_PC
 (
 	.Data0(PC_4_wire),
-	.Data1({{14{Instruction_wire[15]}},Instruction_wire[15:0],2'b00}),
+	.Data1({{14{Instruction_wire[15]}},Instruction_wire[15:0],2'b00};),
 	.Result(BranchPC_wire)
 );
 
@@ -140,7 +142,10 @@ branch_control
 	//.mux_selector(branch),
 	.branch(branch_output)
 );
-
+//añadir mux para PC=Jaddress
+//añadir R[31]=PC para jal
+//añadir mux para PC=[Rs]
+//añadir señal de control
 Multiplexer2to1
 #(
 	.NBits(32)
@@ -239,7 +244,6 @@ luiModule lui(
 //assign branch = (BranchEQ_wire & Zero_wire)|(BranchNE_wire & ~Zero_wire);
 
 assign ALUResultOut = ALUResult_wire;
-
 
 endmodule
 
