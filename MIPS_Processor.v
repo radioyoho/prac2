@@ -128,7 +128,7 @@ Adder32bits
 Address_plus_PC
 (
 	.Data0(PC_4_wire),
-	.Data1({{14{Instruction_wire[15]}},Instruction_wire[15:0],2'b00};),
+	.Data1({{14{Instruction_wire[15]}},Instruction_wire[15:0],2'b00}),
 	.Result(BranchPC_wire)
 );
 
