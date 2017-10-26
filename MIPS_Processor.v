@@ -54,7 +54,7 @@ wire ALUSrc_wire;
 wire RegWrite_wire;
 wire Zero_wire;
 wire Lui_selec;
-
+wire branch_output;
 wire branch;
 
 wire [2:0] ALUOp_wire;
@@ -73,6 +73,8 @@ wire [31:0] InmmediateExtendAnded_wire;
 wire [31:0] PCtoBranch_wire;
 wire [31:0] LuiWire;		//extended inmediat input
 wire [31:0] ALU_or_LUI_wire;	//output from luiMux
+wire [31:0] BranchPC_wire;
+wire [31:0] PC_result_wire;
 integer ALUStatus;
 
 //******************************************************************/
@@ -93,7 +95,7 @@ PC_Register
 ProgramCounter(
 	.clk(clk),
 	.reset(reset),
-	.NewPC(PC_4_wire),
+	.NewPC(PC_result_wire),
 	.PCValue(PC_wire)
 );
 
@@ -120,6 +122,36 @@ PC_Puls_4
 //******************************************************************/
 //******************************************************************/
 //******************************************************************/
+Adder32bits
+Address_plus_PC
+(
+	.Data0(PC_4_wire),
+	.Data1({{14{Instruction_wire[15]}},Instruction_wire[15:0],2'b00}),
+	.Result(BranchPC_wire)
+);
+
+Brancher
+branch_control
+(
+	.Rt(ReadData1_wire),
+	.Rs(ReadData2_wire),
+	.BEQ(BranchEQ_wire),
+	.BNE(BranchNE_wire),
+	//.mux_selector(branch),
+	.branch(branch_output)
+);
+
+Multiplexer2to1
+#(
+	.NBits(32)
+)
+Branch_mux(
+	.Selector(branch_output),
+	.MUX_Data0(PC_4_wire),
+	.MUX_Data1(BranchPC_wire),
+	.MUX_Output(PC_result_wire)
+);
+//******************************************************************/
 
 Multiplexer2to1
 #(
@@ -140,12 +172,12 @@ Register_File
 	.reset(reset),
 	.RegWrite(RegWrite_wire),
 	.WriteRegister(WriteRegister_wire),
-	.ReadRegister1(Instruction_wire[25:21]),
-	.ReadRegister2(Instruction_wire[20:16]),
+	.ReadRegister1(Instruction_wire[25:21]),//Rs
+	.ReadRegister2(Instruction_wire[20:16]),//RT
 	//.WriteData(ALUResult_wire),
 	.WriteData(ALU_or_LUI_wire),
-	.ReadData1(ReadData1_wire),
-	.ReadData2(ReadData2_wire)
+	.ReadData1(ReadData1_wire),//RS
+	.ReadData2(ReadData2_wire)//RT
 );
 
 SignExtend
@@ -204,7 +236,7 @@ luiModule lui(
    .ExtendedOutput(LuiWire)
 );
 
-assign branch = (BranchEQ_wire & Zero_wire)|(BranchNE_wire & ~Zero_wire);
+//assign branch = (BranchEQ_wire & Zero_wire)|(BranchNE_wire & ~Zero_wire);
 
 assign ALUResultOut = ALUResult_wire;
 
