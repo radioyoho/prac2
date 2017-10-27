@@ -144,8 +144,7 @@ branch_control
 	.BNE(BranchNE_wire),
 	.branch(branch_output)
 );
-//añadir R[31]=PC para jal
-//añadir modulo para hacer JumpAddr={ PC+4[31:28], address, 2’b0 } OJO con la suma
+														//añadir R[31]=PC para jal
 Multiplexer4to1
 #(
 	.NBits(32)
@@ -154,7 +153,7 @@ PC_mux(
 	.Selector({jump_wire,branch_or_jal_wire}),
 	.MUX_Data0(PC_4_wire),
 	.MUX_Data1(BranchPC_wire),
-	.MUX_Data2(), //jumpaddr
+	.MUX_Data2({PC_4_wire[31:28],Instruction_wire[25:0],2'b00}), //jumpaddr
 	.MUX_Data3(ReadData1_wire),//Rs	
 	.MUX_Output(PC_result_wire)
 );
