@@ -246,7 +246,7 @@ luiModule lui(
 );
 
 assign ALUResultOut = ALUResult_wire;
-
+//assign for mux selector to PC
 assign branch_or_jal_wire = branch_output | jal_wire;
 
 endmodule
