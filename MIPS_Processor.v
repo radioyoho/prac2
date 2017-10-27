@@ -57,8 +57,9 @@ wire branch_output;
 wire branch;
 
 wire jump_wire;
+wire jr_wire;
 wire jal_wire;
-wire branch_or_jal_wire;
+wire branch_or_jr_wire;
 
 wire [2:0] ALUOp_wire;
 wire [3:0] ALUOperation_wire;
@@ -154,11 +155,11 @@ Multiplexer4to1
 	.NBits(32)
 )
 PC_mux(
-	.Selector({jump_wire,branch_or_jal_wire}),
+	.Selector({jump_wire,branch_or_jr_wire}),
 	.MUX_Data0(PC_4_wire),
 	.MUX_Data1(BranchPC_wire),
 	.MUX_Data2({PC_4_wire[31:28],Instruction_wire[25:0],2'b00}), //jumpaddr
-	//.MUX_Data3(ReadData1_wire),//Rs	
+	.MUX_Data3(ReadData1_wire),//Rs	
 	.MUX_Output(PC_result_wire)
 );
 //******************************************************************/
@@ -240,7 +241,8 @@ ArithmeticLogicUnitControl
 (
 	.ALUOp(ALUOp_wire),
 	.ALUFunction(Instruction_wire[5:0]),
-	.ALUOperation(ALUOperation_wire)
+	.ALUOperation(ALUOperation_wire),
+	.jr(jr_wire)
 );
 
 ALU
@@ -272,6 +274,6 @@ luiModule lui(
 
 assign ALUResultOut = ALUResult_wire;
 //assign for mux selector to PC
-assign branch_or_jal_wire = branch_output | jal_wire;
+assign branch_or_jr_wire = branch_output | jr_wire;
 
 endmodule

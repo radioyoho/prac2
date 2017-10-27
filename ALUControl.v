@@ -4,8 +4,8 @@ module ALUControl
 (
 	input [2:0] ALUOp,
 	input [5:0] ALUFunction,
-	output [3:0] ALUOperation
-
+	output [3:0] ALUOperation,
+	output reg jr
 );
 
 localparam R_Type_AND    = 9'b111_100100;
@@ -39,7 +39,7 @@ always@(Selector)begin
 		R_Type_SUB: 	ALUControlValues = 4'b0100;
 		R_Type_RSHIFT: ALUControlValues = 4'b0101;
 		R_Type_LSHIFT: ALUControlValues = 4'b0110;
-		//R_Type_JR:	 	ALUControlValues = 4'b1110;
+		
 		I_Type_ADDI:   ALUControlValues = 4'b0011;
 		I_Type_ORI: 	ALUControlValues = 4'b0001;
 		//I_Type_BEQ:		ALUControlValues = 4'b1000;
@@ -47,6 +47,12 @@ always@(Selector)begin
 		I_Type_ANDI:	ALUControlValues = 4'b0000;
 		default: ALUControlValues = 4'b1001;
 	endcase
+	
+	if(Selector==R_Type_JR)
+	 	jr = 1'b1;
+	else
+		jr = 1'b0;
+	
 end
 
 
