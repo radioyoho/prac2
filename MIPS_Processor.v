@@ -282,8 +282,8 @@ luiModule lui(
 DataMemory 
 
 #(	
-	.DATA_WIDTH(8)
-	//.MEMORY_DEPTH = 256
+	.DATA_WIDTH(8),
+	.MEMORY_DEPTH(256)
 )
 RAM(
 	.WriteData(ReadData2_wire),
