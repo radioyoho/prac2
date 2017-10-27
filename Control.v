@@ -44,8 +44,8 @@ always@(OP) begin
 		I_Type_BNE:		ControlValues= 14'b000_0_000_00_10_110;
 		I_Type_ANDI:	ControlValues= 14'b000_0_101_00_00_011;
 		
-		I_Type_LW: 		ControlValues= 14'b000_1_111_10_00_001;
-		I_Type_SW:		ControlValues= 14'b000_0_110_01_00_011;
+		I_Type_LW: 		ControlValues= 14'b000_0_111_10_00_001;
+		I_Type_SW:		ControlValues= 14'b000_0_100_01_00_011;
 		
 		J_Type_J:		ControlValues= 14'b010_0_000_00_00_000;
 		J_Type_JAL:		ControlValues= 14'b110_0_001_00_00_000;

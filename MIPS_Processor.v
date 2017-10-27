@@ -302,7 +302,7 @@ Multiplexer2to1
 RAM_Mux(
 	.Selector(MemtoReg_wire),
 	.MUX_Data0(ALU_or_LUI_wire),
-	.MUX_Data1(RAM_OUT_wire),
+	.MUX_Data1({24'b0,RAM_OUT_wire}),
 	.MUX_Output(RAM_or_LUI_wire)
 );
 //*******************RAM MUX
