@@ -1,15 +1,4 @@
 /******************************************************************
-* Description
-*	This is control unit for the MIPS processor. The control unit is 
-*	in charge of generation of the control signals. Its only input 
-*	corresponds to opcode from the instruction.
-*	1.0
-* Author:
-*	Dr. José Luis Pizano Escalante
-* email:
-*	luispizano@iteso.mx
-* Date:
-*	01/03/2014
 ******************************************************************/
 module Control
 (
@@ -56,7 +45,7 @@ always@(OP) begin
 		J_Type_JAL:		ControlValues= 14'b110_0_001_00_00_000;
 		
 		default:
-			ControlValues= 13'b0;
+			ControlValues= 14'b0;
 		endcase
 end	
 	
@@ -79,5 +68,3 @@ assign BranchEQ = ControlValues[3];
 assign ALUOp =    ControlValues[2:0];	
 
 endmodule
-
-

@@ -57,12 +57,17 @@ wire branch_output;
 wire branch;
 
 wire jump_wire;
+wire jr_wire;
 wire jal_wire;
-wire branch_or_jal_wire;
+wire branch_or_jr_wire;
 
 wire [2:0] ALUOp_wire;
 wire [3:0] ALUOperation_wire;
 wire [4:0] WriteRegister_wire;
+
+wire [4:0] AddressRegister_wire;
+wire [31:0] Write2Register_wire;
+
 wire [31:0] MUX_PC_wire;
 wire [31:0] PC_wire;
 wire [31:0] Instruction_wire;
@@ -144,22 +149,43 @@ branch_control
 	.BNE(BranchNE_wire),
 	.branch(branch_output)
 );
-//añadir R[31]=PC para jal
-//añadir modulo para hacer JumpAddr={ PC+4[31:28], address, 2’b0 } OJO con la suma
+
 Multiplexer4to1
 #(
 	.NBits(32)
 )
 PC_mux(
-	.Selector({jump_wire,branch_or_jal_wire}),
+	.Selector({jump_wire,branch_or_jr_wire}),
 	.MUX_Data0(PC_4_wire),
 	.MUX_Data1(BranchPC_wire),
-	.MUX_Data2(), //jumpaddr
+	.MUX_Data2({PC_4_wire[31:28],Instruction_wire[25:0],2'b00}), //jumpaddr
 	.MUX_Data3(ReadData1_wire),//Rs	
 	.MUX_Output(PC_result_wire)
 );
 //******************************************************************/
 //******************************************************************/
+Multiplexer2to1
+#(
+	.NBits(32)
+)
+JALMux_data(
+	.Selector(jal_wire),
+	.MUX_Data0(ALU_or_LUI_wire),
+	.MUX_Data1(PC_4_wire),
+	.MUX_Output(Write2Register_wire)
+);
+//*****************************MUX to write PC+4 to Register
+Multiplexer2to1
+#(
+	.NBits(5)
+)
+JALMux(
+	.Selector(jal_wire),
+	.MUX_Data0(WriteRegister_wire),
+	.MUX_Data1(5'b11111),
+	.MUX_Output(AddressRegister_wire)
+);
+//*****************************MUX to choose register 31
 //******************************************************************/
 //******************************************************************/
 //******************************************************************/
@@ -181,10 +207,10 @@ Register_File
 	.clk(clk),
 	.reset(reset),
 	.RegWrite(RegWrite_wire),
-	.WriteRegister(WriteRegister_wire),
+	.WriteRegister(AddressRegister_wire),
 	.ReadRegister1(Instruction_wire[25:21]),//Rs
 	.ReadRegister2(Instruction_wire[20:16]),//RT
-	.WriteData(ALU_or_LUI_wire),
+	.WriteData(Write2Register_wire),
 	.ReadData1(ReadData1_wire),//RS
 	.ReadData2(ReadData2_wire)//RT
 );
@@ -215,7 +241,8 @@ ArithmeticLogicUnitControl
 (
 	.ALUOp(ALUOp_wire),
 	.ALUFunction(Instruction_wire[5:0]),
-	.ALUOperation(ALUOperation_wire)
+	.ALUOperation(ALUOperation_wire),
+	.jr(jr_wire)
 );
 
 ALU
@@ -246,7 +273,7 @@ luiModule lui(
 );
 
 assign ALUResultOut = ALUResult_wire;
-
-assign branch_or_jal_wire = branch_output | jal_wire;
+//assign for mux selector to PC
+assign branch_or_jr_wire = branch_output | jr_wire;
 
 endmodule
