@@ -59,6 +59,7 @@ wire branch;
 wire jump_wire;
 wire jr_wire;
 wire jal_wire;
+wire jump_or_jr_wire;
 wire branch_or_jr_wire;
 
 wire MemRead_wire;
@@ -72,7 +73,7 @@ wire [4:0] WriteRegister_wire;
 wire [4:0] AddressRegister_wire;
 wire [31:0] Write2Register_wire;
 
-wire [7:0] RAM_OUT_wire;
+wire [31:0] RAM_OUT_wire;
 wire [31:0] RAM_or_LUI_wire;
 
 wire [31:0] MUX_PC_wire;
@@ -121,7 +122,8 @@ ProgramCounter(
 
 ProgramMemory
 #(
-	.MEMORY_DEPTH(MEMORY_DEPTH)
+	.MEMORY_DEPTH(MEMORY_DEPTH),
+	.DATA_WIDTH(32)
 )
 ROMProgramMemory
 (
@@ -162,7 +164,7 @@ Multiplexer4to1
 	.NBits(32)
 )
 PC_mux(
-	.Selector({jump_wire,branch_or_jr_wire}),
+	.Selector({jump_or_jr_wire,branch_or_jr_wire}),
 	.MUX_Data0(PC_4_wire),
 	.MUX_Data1(BranchPC_wire),
 	.MUX_Data2({PC_4_wire[31:28],Instruction_wire[25:0],2'b00}), //jumpaddr
@@ -282,12 +284,12 @@ luiModule lui(
 DataMemory 
 
 #(	
-	.DATA_WIDTH(8),
+	.DATA_WIDTH(32),
 	.MEMORY_DEPTH(MEMORY_DEPTH)
 )
 RAM(
 	.WriteData(ReadData2_wire),
-	.Address(ALUResult_wire[10:2]),
+	.Address({24'b0,ALUResult_wire[10:2]}),
 	.MemWrite(MemWrite_wire),
 	.MemRead(MemRead_wire), 
 	.clk(clk),
@@ -302,7 +304,7 @@ Multiplexer2to1
 RAM_Mux(
 	.Selector(MemtoReg_wire),
 	.MUX_Data0(ALU_or_LUI_wire),
-	.MUX_Data1({24'b0,RAM_OUT_wire}),
+	.MUX_Data1(RAM_OUT_wire),
 	.MUX_Output(RAM_or_LUI_wire)
 );
 //*******************RAM MUX
@@ -311,5 +313,5 @@ assign ALUResultOut = ALUResult_wire;
 
 //assign for mux selector to PC
 assign branch_or_jr_wire = branch_output | jr_wire;
-
+assign jump_or_jr_wire = jump_wire | jr_wire;
 endmodule
