@@ -26,7 +26,7 @@
 ******************************************************************/
 
 module MIPS_Processor
-#(	parameter MEMORY_DEPTH = 32)
+#(	parameter MEMORY_DEPTH = 256)
 (
 	// Inputs
 	input clk,
@@ -283,7 +283,7 @@ DataMemory
 
 #(	
 	.DATA_WIDTH(8),
-	.MEMORY_DEPTH(256)
+	.MEMORY_DEPTH(MEMORY_DEPTH)
 )
 RAM(
 	.WriteData(ReadData2_wire),
